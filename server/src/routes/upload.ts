@@ -5,20 +5,22 @@ import path from 'path';
 const router = Router();
 
 // Upload multiple images
-router.post('/images', (req: Request, res: Response) => {
+router.post('/images', (req: Request, res: Response): void => {
   uploadMultiple(req, res, (err) => {
     if (err) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: err.message
       });
+      return;
     }
 
     if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: 'Không có file nào được upload'
       });
+      return;
     }
 
     // Tạo URLs cho các file đã upload
@@ -37,20 +39,22 @@ router.post('/images', (req: Request, res: Response) => {
 });
 
 // Upload single image
-router.post('/image', (req: Request, res: Response) => {
+router.post('/image', (req: Request, res: Response): void => {
   uploadSingle(req, res, (err) => {
     if (err) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: err.message
       });
+      return;
     }
 
     if (!req.file) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: 'Không có file nào được upload'
       });
+      return;
     }
 
     const imageUrl = `/uploads/${req.file.filename}`;
