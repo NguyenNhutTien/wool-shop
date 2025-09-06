@@ -1,0 +1,19 @@
+1) Thêm lọc & tìm kiếm sản phẩm
+
+Thêm filter theo tags và ô tìm kiếm theo name trên trang /products. API GET /api/products hỗ trợ query ?q=&tags=. Cập nhật UI giữ trạng thái filter trên URL. Viết test tay (mô tả) các ca: không kết quả, nhiều tag, clear filter.
+
+2) Admin mini không đăng nhập (tạm thời)
+
+Tạo trang /admin (ẩn link) đọc biến env VITE_ADMIN_KEY; chỉ cho phép truy cập nếu query ?key=... khớp VITE_ADMIN_KEY. Trang có form tạo/sửa/xóa sản phẩm (CRUD gọi API POST/PUT/DELETE /api/products), validate đầy đủ. Đây là tạm thời để nhập liệu, sau này sẽ thêm auth thật.
+
+3) Chuyển ảnh sang Cloudinary (tùy chọn)
+
+Tích hợp upload ảnh sản phẩm lên Cloudinary ở /admin. Lưu image về DB là URL Cloudinary. Cập nhật README cấu hình CLOUDINARY_URL.
+
+4) Đa ngôn ngữ
+
+Trích toàn bộ text UI ra file locales/vi.ts và locales/en.ts. Tạo toggle ngôn ngữ, lưu vào localStorage. Mặc định vi.
+
+5) Kiểm thử cơ bản
+
+Thêm Playwright hoặc Cypress test E2E cho các flow: xem danh sách, xem chi tiết, tạo order, tạo contact. Cấu hình chạy cục bộ.

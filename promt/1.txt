@@ -1,0 +1,157 @@
+Hãy tạo cho mình một dự án MERN (MongoDB + Express + React + Node.js) hoàn chỉnh cho website bán sản phẩm len thủ công (móc khóa, gấu bông). Yêu cầu:
+
+0) Tổng quan
+Mục tiêu: MVP bán hàng không cần thanh toán online (đặt hàng qua form, xác nhận qua Zalo/điện thoại).
+
+Kiến trúc monorepo 2 thư mục:
+
+/server: Node.js + Express + TypeScript (ưu tiên), Mongoose cho MongoDB.
+
+/client: React + Vite + TypeScript + Tailwind CSS.
+
+Code sạch, tách lớp (routes/controllers/services/models), dễ cho AI mở rộng.
+
+Responsive (mobile-first), SEO cơ bản, hỗ trợ i18n tiếng Việt trước.
+
+Viết kèm README hướng dẫn chạy local + deploy.
+
+1) Chức năng bắt buộc (MVP)
+Trang chủ: Hero tông pastel, kể câu chuyện đồ len thủ công, CTA “Xem sản phẩm”.
+
+Trang danh sách sản phẩm /products: lưới 2–3 cột, mỗi card: ảnh, tên, giá tham khảo, tags, nút “Xem chi tiết” và “Đặt hàng”.
+
+Trang chi tiết sản phẩm /products/:slug: ảnh lớn + gallery, mô tả ngắn, kích thước (nếu có), giá tham khảo, tags.
+
+Giỏ/đặt hàng đơn giản /order: form gồm tên, SĐT/Zalo, địa chỉ (tuỳ chọn), ghi chú, danh sách món (id, số lượng). Submit call API → lưu vào DB.
+
+Trang liên hệ /contact: form (tên, SĐT/Zalo, nội dung) → API lưu DB.
+
+Thông báo (toast) thành công/thất bại cho mọi thao tác.
+
+2) Backend /server
+Tech: Node 18+, Express, TypeScript, Mongoose, Zod (hoặc Joi) validate, dotenv, CORS.
+
+Models:
+
+Product: { _id, name, slug, price, images: string[], tags: string[], description, createdAt }
+
+Order: { _id, items: [{productId, qty}], customer: {name, phone, address?}, note?, status: 'new'|'confirmed'|'cancelled', createdAt }
+
+Contact: { _id, name, phone, message, createdAt }
+
+Routes:
+
+GET /api/products (query by tag/search optional), GET /api/products/:slug
+
+POST /api/orders (validate với Zod)
+
+POST /api/contacts
+
+Seed: script npm run seed thêm 6–9 sản phẩm mẫu (móc khóa/gấu bông) + ảnh demo (dùng URL placeholder).
+
+Cấu hình:
+
+ENV: MONGODB_URI, PORT, CLIENT_ORIGIN.
+
+Bật CORS cho CLIENT_ORIGIN.
+
+Error handler thống nhất, trả JSON có message/issues rõ ràng.
+
+Scripts: dev (ts-node-dev), build, start.
+
+Chất lượng: ESLint + Prettier cấu hình tối thiểu TS.
+
+3) Frontend /client
+Tech: React + Vite + TypeScript + React Router + Tailwind + Axios + React Query (hoặc SWR).
+
+Trang & components:
+
+Layout chung: Header (logo, menu: Home/Products/Order/Contact), Footer (mạng xã hội/Zalo).
+
+Pages: Home, Products, ProductDetail, Order, Contact, NotFound.
+
+Components: ProductCard, ProductGrid, ProductGallery, OrderForm, ContactForm, TagFilter, Toast.
+
+State:
+
+Giỏ tạm (local state hoặc Zustand) gồm {productId, qty}.
+
+API client:
+
+Base URL từ .env (Vite): VITE_API_BASE_URL.
+
+Hook cho useProducts, useProduct(slug), useCreateOrder, useCreateContact.
+
+UI/UX:
+
+Mobile-first, grid linh hoạt (2 cột mobile, 3 cột desktop).
+
+Màu pastel nhẹ (không cài UI lib nặng). Dùng Tailwind utility.
+
+Fallback ảnh nếu URL lỗi.
+
+Loading/skeleton cơ bản.
+
+SEO:
+
+Thêm <title>, <meta description> mỗi trang (ít nhất Home/Products/ProductDetail).
+
+Open Graph cơ bản ở index.html.
+
+i18n: tối thiểu trích text ra constants để dễ dịch (chưa cần lib i18n).
+
+4) Dữ liệu & ảnh
+Ảnh sản phẩm dùng link placeholder mặc định (ví dụ https://picsum.photos/…) và hướng dẫn chỗ thay ảnh thật sau này.
+
+Mỗi sản phẩm có 1–3 ảnh, 2–4 tags (ví dụ: “móc khóa”, “gấu bông”, “quà tặng”, “handmade”).
+
+5) Bảo trì & mở rộng
+Tách rõ controllers/, services/, models/, routes/ trong server.
+
+Comment ngắn ở đầu mỗi controller/service giải thích trách nhiệm.
+
+Hướng dẫn trong README cách:
+
+Thêm sản phẩm mới.
+
+Sửa giá/ảnh.
+
+Build & deploy.
+
+6) Output yêu cầu (rất quan trọng)
+Trả về cấu trúc thư mục đầy đủ.
+
+Trả về toàn bộ nội dung file chính dưới dạng khối code (không rút gọn), gồm:
+
+server: package.json, tsconfig.json, .env.example, src/index.ts, src/app.ts, src/routes/*.ts, src/controllers/*.ts, src/services/*.ts, src/models/*.ts, src/utils/validate.ts, scripts/seed.ts.
+
+client: package.json, index.html, vite.config.ts, tailwind.config.js, postcss.config.js, .env.example, src/main.tsx, src/App.tsx, src/pages/*.tsx, src/components/*.tsx, src/lib/api.ts, src/hooks/*.ts.
+
+README.md ở root hướng dẫn chạy và deploy.
+
+Ghi rõ phiên bản chính của lib/framework đã dùng.
+
+Không tự ý thay đổi tech stack ngoài yêu cầu. Nếu cần thêm lib, giải thích lý do trước khi thêm.
+
+Mọi form phải có validate phía client và server (Zod).
+
+7) Hướng dẫn chạy & deploy (ghi trong README)
+Local:
+
+cp server/.env.example server/.env → điền MONGODB_URI.
+
+cp client/.env.example client/.env → điền VITE_API_BASE_URL.
+
+npm i cho cả server và client.
+
+Chạy npm run dev mỗi bên (hoặc thêm script root).
+
+Deploy gợi ý:
+
+Backend: Render/Railway/Fly.io (Node 18), set MONGODB_URI (Mongo Atlas).
+
+Frontend: Vercel/Netlify → set VITE_API_BASE_URL trỏ về backend.
+
+Checklists sau deploy: test GET /api/products, tạo order, kiểm tra CORS.
+
+Hãy tạo dự án theo đúng yêu cầu trên và trả về mã nguồn đầy đủ.
